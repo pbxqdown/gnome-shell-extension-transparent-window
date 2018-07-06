@@ -1,6 +1,10 @@
 # gnome-shell-extension-transparent-window
 ## Summary
 The extension will change the opacity of window by hovering over the window, hold Alt key and scroll. 
+
+## Environment
+Tested on Ubuntu 18.04 Gnome 3.28.
+
 ## Motivation
 Transparent window is a very useful feature that can improve work effeciency. It is implemented by software in multiple platforms. Even other Linux desktop like Ubuntu Unity can use Compiz to achieve this goal. There is no reason Gnome doesn't have this feature.
 
