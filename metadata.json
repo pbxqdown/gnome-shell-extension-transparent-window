@@ -1,0 +1,10 @@
+{
+  "name": "Transparent Window",
+  "description": "Change the opacity of windows by compiz-style shortcut Alt+scroll.",
+  "shell-version": [
+    "3.28.1"
+  ],
+  "url": "",
+  "uuid": "transparent-window@pbxqdown.github.com",
+  "version": 1
+}
