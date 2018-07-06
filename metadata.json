@@ -4,7 +4,7 @@
   "shell-version": [
     "3.28.1"
   ],
-  "url": "",
+  "url": "https://github.com/pbxqdown/gnome-shell-extension-transparent-window",
   "uuid": "transparent-window@pbxqdown.github.com",
   "version": 1
 }
