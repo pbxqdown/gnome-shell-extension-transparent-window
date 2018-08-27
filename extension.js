@@ -11,20 +11,24 @@ const Layout = imports.ui.layout;
 const Gdk = imports.gi.Gdk;
 const Keymap = Gdk.Keymap.get_default();
 
+const currentExtension = ExtensionUtils.getCurrentExtension();
+const Logger = currentExtension.imports.logger.Logger;
+
 let text, button, settings, win_actor, overlayContainer, overlay, sig_scroll, sig_keymap;
 let step = 5;
 let min_opacity = 20;
 let overlayExists = false; //ensure only one overlay is created
 
+let Log;
 
 //TODO: Add a simple option dialog to customize the hotkey and other options
 function init() {
-
+  Log = new Logger("TransparentWindow", Logger.LEVEL_INFO);
 }
 
 function getMouseHoveredWindowActor() {
   let [mouse_x, mouse_y, mask] = global.get_pointer();
-  //log(mouse_x + "," + mouse_y);
+  Log.debug(mouse_x + "," + mouse_y);
   let window_actors = global.get_window_actors();
   let result = null;
   window_actors.forEach(function(actor) {
@@ -40,13 +44,12 @@ function getMouseHoveredWindowActor() {
 }
 
 function onScroll(actor, event) {
-  //log("on scroll");
-
+  Log.debug("on scroll");
   win_actor = getMouseHoveredWindowActor();
   let opacity = win_actor.get_opacity();
 
   let dir = event.get_scroll_direction();
-  //log(dir);
+  Log.debug(dir);
   switch(dir) {
     case Clutter.ScrollDirection.UP:
       opacity += step;
@@ -57,7 +60,7 @@ function onScroll(actor, event) {
     default:
       return Clutter.EVENT_PROPAGATE;
   }
-  //log("opacity: " + opacity);
+  Log.debug("opacity: " + opacity);
   win_actor.set_opacity(Math.max(min_opacity, Math.min(opacity, 255)));
   return Clutter.EVENT_STOP;
 }
@@ -65,7 +68,7 @@ function onScroll(actor, event) {
 
 function createOverlay() {
   if(overlayExists) return;
-  //log("overlay created");
+  Log.debug("overlay created");
   overlayContainer = new St.Widget({
     clip_to_allocation: true,
     layout_manager: new Clutter.BinLayout()
@@ -91,7 +94,7 @@ function createOverlay() {
 
 function destroyOverlay() {
   if(!overlayExists) return;
-  //log("overlay destroyed");
+  Log.debug("overlay destroyed");
   if(overlayContainer) Main.layoutManager.removeChrome(overlayContainer);
   if(overlay) Main.layoutManager.untrackChrome(overlay);
   if(overlay && sig_scroll) overlay.disconnect(sig_scroll);
@@ -102,12 +105,12 @@ function destroyOverlay() {
 }
 
 function onHotkeyPressed() {
-  //log("Hot key pressed");
+  Log.debug("Hot key pressed");
   let multiKeysCode = Keymap.get_modifier_state();
-  //log(multiKeysCode);
+  Log.debug(multiKeysCode);
   switch(multiKeysCode) {
     case Clutter.ModifierType.MOD1_MASK:
-      //log("alt pressed, listening to scroll");
+      Log.debug("alt pressed, listening to scroll");
       createOverlay();
       break;
     default:
@@ -115,22 +118,6 @@ function onHotkeyPressed() {
       return;
   }
   return;
-
-  let workspace = global.screen.get_active_workspace();
-  //current_window = get_focus_window();
-  let windows = workspace.list_windows();
-  for ( let i = 0; i < windows.length; ++i ) {
-    if (windows[i].has_focus()) {
-
-    }
-  }
-  let window_actors = global.get_window_actors();
-  window_actors.forEach(function(actor) {
-    let win = actor.get_meta_window();
-    if(win.has_focus()) {
-      actor.set_opacity(100);
-    }
-  });
 }
 
 function enable() {
