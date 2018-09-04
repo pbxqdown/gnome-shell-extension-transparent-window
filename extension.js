@@ -92,6 +92,7 @@ function createOverlay() {
     x_fill: true,
     y_fill: false,
     track_hover: true });
+  //TODO:support multi-monitor
   let monitor = Main.layoutManager.primaryMonitor;
   overlay.set_size(monitor.width, monitor.height);
   overlay.set_position(0, 0);
