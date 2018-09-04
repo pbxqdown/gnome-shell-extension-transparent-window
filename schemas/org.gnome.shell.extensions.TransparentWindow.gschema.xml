@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="gnome-shell-extension-transparentwindow">
+    <schema path="/org/gnome/shell/extensions/TransparentWindow/" id="org.gnome.shell.extensions.TransparentWindow">
+        <key name="modifier-key" type="i">
+            <default>8</default>
+            <summary>Modifier key used to set transparency</summary>
+        </key>
+        <key name="verbose-level" type="i">
+            <default>3</default>
+            <summary>Log verbose level</summary>
+        </key>
+    </schema>
+</schemalist>

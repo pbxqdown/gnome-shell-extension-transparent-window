@@ -11,8 +11,13 @@ const Layout = imports.ui.layout;
 const Gdk = imports.gi.Gdk;
 const Keymap = Gdk.Keymap.get_default();
 
+//logger
 const currentExtension = ExtensionUtils.getCurrentExtension();
 const Logger = currentExtension.imports.logger.Logger;
+
+//setting
+const Convenience = currentExtension.imports.convenience;
+let setting = Convenience.getSettings();
 
 let text, button, settings, win_actor, overlayContainer, overlay, sig_scroll, sig_keymap;
 let step = 5;
@@ -21,9 +26,14 @@ let overlayExists = false; //ensure only one overlay is created
 
 let Log;
 
-//TODO: Add a simple option dialog to customize the hotkey and other options
+let sig_verbose_level;
+let sig_modifier_key;
+let modifier_key;
+
+//TODO: Add "About" page. Add config for minimum opacity and step.
 function init() {
-  Log = new Logger("TransparentWindow", Logger.LEVEL_INFO);
+  Log = new Logger("TransparentWindow", setting.get_int('verbose-level'));
+  modifier_key = setting.get_int('modifier-key');
 }
 
 function getMouseHoveredWindowActor() {
@@ -106,11 +116,12 @@ function destroyOverlay() {
 
 function onHotkeyPressed() {
   Log.debug("Hot key pressed");
-  let multiKeysCode = Keymap.get_modifier_state();
+  //Clear the lock bit so the status of Caps_Lock won't affect the functionality
+  let multiKeysCode = Keymap.get_modifier_state() & (~2);
   Log.debug(multiKeysCode);
   switch(multiKeysCode) {
-    case Clutter.ModifierType.MOD1_MASK:
-      Log.debug("alt pressed, listening to scroll");
+    case modifier_key:
+      Log.debug("Modifier key pressed, listening to scroll");
       createOverlay();
       break;
     default:
@@ -122,9 +133,16 @@ function onHotkeyPressed() {
 
 function enable() {
   sig_keymap = Keymap.connect('state_changed', onHotkeyPressed);
+
+  sig_verbose_level = setting.connect('changed::verbose-level', ()=>{Log.setLevel(setting.get_int('verbose-level'))});
+  sig_modifier_key = setting.connect('changed::modifier-key', ()=> {modifier_key = setting.get_int('modifier-key');});
 }
 
 function disable() {
   Keymap.disconnect(sig_keymap);
   sig_keymap = null;
+  setting.disconnect(sig_verbose_level);
+  sig_verbose_level = null;
+  setting.disconnect(sig_modifier_key);
+  sig_modifier_key = null;
 }

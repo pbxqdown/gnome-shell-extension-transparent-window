@@ -4,6 +4,10 @@ function Logger(module, verboseLevel){
   this.moduleName = "[" + module + "]";
   this.level = verboseLevel;
 
+  this.setLevel = function(level){
+    this.level = level;
+  }
+
   this.checkLevel = function(level){
     //global.log(level, this.level)
     return level >= this.level;
