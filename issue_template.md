@@ -11,9 +11,9 @@ You can obtain the GNOME version by:
 Describe the problem here, including the steps to reproduce the problem.
 
 ### Source code / logs 
-Include any logs or source code that would be helpful to diagnose the problem. 
-First, in the preference, Set the log verbose level to "Debug";
-Then you can view gnome shell extension's log via:
+Include any logs or source code that would be helpful to diagnose the problem.   
+First, in the preference, Set the log verbose level to "Debug";  
+Then you can view gnome shell extension's log via:  
 ```
 journalctl /usr/bin/gnome-shell -r |grep TransparentWindow
 ```
