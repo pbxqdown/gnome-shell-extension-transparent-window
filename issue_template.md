@@ -12,11 +12,12 @@ Describe the problem here, including the steps to reproduce the problem.
 
 ### Source code / logs 
 Include any logs or source code that would be helpful to diagnose the problem. 
-You can view gnome shell extension's log via:
+First, in the preference, Set the log verbose level to "Debug";
+Then you can view gnome shell extension's log via:
 ```
-journalctl /usr/bin/gnome-shell -r
+journalctl /usr/bin/gnome-shell -r |grep TransparentWindow
 ```
 To view logs dynamically:
 ```
-journalctl /usr/bin/gnome-shell -f
+journalctl /usr/bin/gnome-shell -f |grep TransparentWindow
 ```
