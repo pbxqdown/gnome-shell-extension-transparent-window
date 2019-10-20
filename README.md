@@ -1,6 +1,9 @@
 # gnome-shell-extension-transparent-window
 ## Summary
-The extension will change the opacity of window by hovering over the window, hold Alt key(or customized modifier key) and scroll. 
+The extension will change the opacity of window through simple mouse/keyboard operation.
+
+## Usage
+Move mouse cursor into the window you want to change, hover over the window, hold Alt key(or customized modifier key) and scroll to make the window transparent. 
 
 ## Environment
 Tested on Ubuntu 18.04 Gnome 3.28.
