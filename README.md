@@ -9,7 +9,7 @@ Move mouse cursor into the window you want to change, hover over the window, hol
 Tested on Ubuntu 18.04 Gnome 3.28.
 
 ## Motivation
-Transparent window is a very useful feature that can improve work effeciency. It is implemented by software in multiple platforms. Even other Linux desktop like Ubuntu Unity can use Compiz to achieve this goal. There is no reason Gnome doesn't have this feature.
+Transparent window is a very useful feature that can improve work effeciency. It is implemented by software on multiple platforms. Even other Linux desktops like Ubuntu Unity can use Compiz to achieve this goal. There is no reason Gnome doesn't have this feature.
 
 ## Method
 Use GdkKeymap to monitor the hotkeys. When the modifier key is pressed, create an overlay actor that will monitor the scroll event. Once the scroll event is detected, modify the opacity of the mouse hovered window.
