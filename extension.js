@@ -56,7 +56,8 @@ function getMouseHoveredWindowActor() {
 function onScroll(actor, event) {
   Log.debug("on scroll");
   win_actor = getMouseHoveredWindowActor();
-  let opacity = win_actor.get_opacity();
+  let win_surface = win_actor.get_children();
+  let opacity = win_surface[0].opacity;
 
   let dir = event.get_scroll_direction();
   Log.debug(dir);
@@ -71,7 +72,8 @@ function onScroll(actor, event) {
       return Clutter.EVENT_PROPAGATE;
   }
   Log.debug("opacity: " + opacity);
-  win_actor.set_opacity(Math.max(min_opacity, Math.min(opacity, 255)));
+  opacity = Math.max(min_opacity, Math.min(opacity, 255));
+  win_surface[0].opacity = opacity;
   return Clutter.EVENT_STOP;
 }
 
