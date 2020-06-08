@@ -19,6 +19,16 @@ const Logger = currentExtension.imports.logger.Logger;
 const Convenience = currentExtension.imports.convenience;
 let setting = Convenience.getSettings();
 
+//Gnome version check
+function isVersionGreaterOrEqual(major, minor) {
+    lis = imports.misc.config.PACKAGE_VERSION.split('.');
+    if (parseInt(lis[0]) > major) return true;
+    if (parseInt(lis[0]) < major) return false;
+    if (parseInt(lis[1]) > minor) return true;
+    if (parseInt(lis[1]) < minor) return false;
+    return true;
+}
+
 let text, button, settings, win_actor, overlayContainer, overlay, sig_scroll, sig_keymap;
 let step = 5;
 let min_opacity = 20;
@@ -34,6 +44,8 @@ let modifier_key;
 function init() {
   Log = new Logger("TransparentWindow", setting.get_int('verbose-level'));
   modifier_key = setting.get_int('modifier-key');
+  Log.debug("Gnome version:" + imports.misc.config.PACKAGE_VERSION);
+  gnome_at_least_3_34 = isVersionGreaterOrEqual(3, 34);
 }
 
 function getMouseHoveredWindowActor() {
@@ -56,8 +68,9 @@ function getMouseHoveredWindowActor() {
 function onScroll(actor, event) {
   Log.debug("on scroll");
   win_actor = getMouseHoveredWindowActor();
-  let win_surface = win_actor.get_children();
-  let opacity = win_surface[0].opacity;
+  //Gnome 3.34 and above introduced MetaSurfaceActor. We need to get this actor below MetaWindowActor and apply opacity-change on it.
+  if (gnome_at_least_3_34) win_actor = win_actor.get_children()[0];
+  let opacity = win_actor.get_opacity();
 
   let dir = event.get_scroll_direction();
   Log.debug(dir);
@@ -72,8 +85,7 @@ function onScroll(actor, event) {
       return Clutter.EVENT_PROPAGATE;
   }
   Log.debug("opacity: " + opacity);
-  opacity = Math.max(min_opacity, Math.min(opacity, 255));
-  win_surface[0].opacity = opacity;
+  win_actor.set_opacity(Math.max(min_opacity, Math.min(opacity, 255)));
   return Clutter.EVENT_STOP;
 }
 
