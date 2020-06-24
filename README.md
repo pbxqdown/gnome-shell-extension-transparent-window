@@ -40,7 +40,7 @@ Press Alt-F2, type **lg**, then hit Enter.
 ### Logs
 Gnome shell extensions log to the standard location of Linux logs: ```/var/log/syslog```
 
-Use ```journalctl -f``` to inspect logs.
+Use ```journalctl -b0  /usr/bin/gnome-shell |grep -i transparent.*window``` to inspect logs.
 
 
 ## Reference

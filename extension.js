@@ -21,7 +21,7 @@ let setting = Convenience.getSettings();
 
 //Gnome version check
 function isVersionGreaterOrEqual(major, minor) {
-    lis = imports.misc.config.PACKAGE_VERSION.split('.');
+    let lis = imports.misc.config.PACKAGE_VERSION.split('.');
     if (parseInt(lis[0]) > major) return true;
     if (parseInt(lis[0]) < major) return false;
     if (parseInt(lis[1]) > minor) return true;
@@ -39,6 +39,8 @@ let Log;
 let sig_verbose_level;
 let sig_modifier_key;
 let modifier_key;
+let gnome_at_least_3_34;
+
 
 //TODO: Add "About" page. Add config for minimum opacity and step.
 function init() {

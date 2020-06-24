@@ -15,9 +15,9 @@ Include any logs or source code that would be helpful to diagnose the problem.
 First, in the preference, Set the log verbose level to "Debug";  
 Then you can view gnome shell extension's log via:  
 ```
-journalctl /usr/bin/gnome-shell -r |grep TransparentWindow
+journalctl -b0 /usr/bin/gnome-shell |grep -i transparent.*window
 ```
 To view logs dynamically:
 ```
-journalctl /usr/bin/gnome-shell -f |grep TransparentWindow
+journalctl /usr/bin/gnome-shell -f |grep -i transparent.*window
 ```
