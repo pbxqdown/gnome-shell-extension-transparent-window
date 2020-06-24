@@ -37,6 +37,10 @@ GNOME Shell itself is a plugin of Mutter. This means when devloping shell extens
 Looking Glass is GNOME Shell's integrated debugger and inspector tool. It would be helpful to debug any issue of the extension.
 #### Usage
 Press Alt-F2, type **lg**, then hit Enter.
+### Logs
+Gnome shell extensions log to the standard location of Linux logs: ```/var/log/syslog```
+
+Use ```journalctl -f``` to inspect logs.
 
 
 ## Reference
