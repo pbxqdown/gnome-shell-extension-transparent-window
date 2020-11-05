@@ -105,7 +105,7 @@ function createOverlay() {
   
   // check gnome version to determine correct call to create new overlay 
   if (gnome_at_least_3_38) {
-    overlay = new St.Bin({ style_class: '', reactive: true, can_focus: true, x_expand: true, y_expand: false, track_hover: true });
+    overlay = new St.Bin({ style_class: '', reactive: true, can_focus: true, track_hover: true });
   } else {
     overlay = new St.Bin({ style_class: '', reactive: true, can_focus: true, x_fill: true, y_fill: false, track_hover: true });
   };
