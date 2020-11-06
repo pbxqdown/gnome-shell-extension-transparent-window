@@ -1,6 +1,6 @@
 const St = imports.gi.St;
 const Main = imports.ui.main;
-const Tweener = imports.ui.tweener;
+//const Tweener = imports.ui.tweener; //not referenced anywhere in file and apparently not needed. commented out for 3.38 compatibility
 const Shell = imports.gi.Shell;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -48,6 +48,9 @@ function init() {
   modifier_key = setting.get_int('modifier-key');
   Log.debug("Gnome version:" + imports.misc.config.PACKAGE_VERSION);
   gnome_at_least_3_34 = isVersionGreaterOrEqual(3, 34);
+  // gnome 3.38 includes syntax changes to creating new overlay. 
+  // this will be used later to decide which method to use in createOverlay 
+  gnome_at_least_3_38 = isVersionGreaterOrEqual(3, 38);
 }
 
 function getMouseHoveredWindowActor() {
@@ -101,13 +104,13 @@ function createOverlay() {
   });
   overlayContainer.add_constraint(new Layout.MonitorConstraint({primary: true, work_area: true}));
   Main.layoutManager.addChrome(overlayContainer, {affectsInputRegion: false});
-
-  overlay = new St.Bin({ style_class: '',
-    reactive: true,
-    can_focus: true,
-    x_fill: true,
-    y_fill: false,
-    track_hover: true });
+  
+  // check gnome version to determine correct call to create new overlay 
+  if (gnome_at_least_3_38) {
+    overlay = new St.Bin({ style_class: '', reactive: true, can_focus: true, x_expand: true, y_expand: false, track_hover: true });
+  } else {
+    overlay = new St.Bin({ style_class: '', reactive: true, can_focus: true, x_fill: true, y_fill: false, track_hover: true });
+  };
   //TODO:support multi-monitor
   let monitor = Main.layoutManager.primaryMonitor;
   overlay.set_size(monitor.width, monitor.height);
