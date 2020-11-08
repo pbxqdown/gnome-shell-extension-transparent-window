@@ -13,13 +13,19 @@ Tested on:
 ## Motivation
 Transparent window is a very useful feature that can improve work effeciency. It is implemented by software on multiple platforms. Even other Linux desktops like Ubuntu Unity can use Compiz to achieve this goal. There is no reason Gnome doesn't have this feature.
 
-## Method
+## Design
 Use GdkKeymap to monitor the hotkeys. When the modifier key is pressed, create an overlay actor that will monitor the scroll event. Once the scroll event is detected, modify the opacity of the mouse hovered window.
 
 ## Limits
-In gnome-shell I didn't find a way to monitor the scroll event for each window actor, so I can only create an overlay that is on top of all windows. Thus Alt+drag won't work if you toggle on this extension. Feel free to contact me or make a commit if you have a better idea to fix this.
+An overlay on top of all windows has to be created in order to monitor scroll event. Thus Alt+drag operation won't work anymore. Feel free to contact me or make a commit if you have a better idea to solve the problem.
 
 ## Background knowledge
+### Gjs
+Gjs is a JavaScript binding for GNOME and can be used to interact with Gtk
+### GTK
+GTK is a widget toolkit for creating GUI on top of GDK.
+### GDK
+The wrapper library of low-level window/graphics functions.
 ### Clutter
 #### Overview
 Clutter is a GObject-based **graphics library** for creating user interfaces.
@@ -29,8 +35,12 @@ Actor is a basic element of Clutter. It encapsulates the postion/size/event of a
 Mutter is the default **window manager** of GNOME3 which uses Clutter as library.
 #### Tips
 Mutter is a portmanteau of "Metacity"(The deprecated window manger of GNOME2) and "Clutter".
+
 ### GNOME Shell
 GNOME Shell itself is a plugin of Mutter. This means when devloping shell extension, we are building plugin on plugin lol.
+Project location: [https://gitlab.gnome.org/GNOME/gnome-shell/](https://gitlab.gnome.org/GNOME/gnome-shell/)
+#### ST(Shell Toolkit)
+This is Gnome-shell's Clutter-based toolkit that defines useful actors. Examples are StBin, StButton, etc.
 
 ## Debugging
 ### Looking Glass
@@ -41,6 +51,12 @@ Press Alt-F2, type **lg**, then hit Enter.
 Gnome shell extensions log to the standard location of Linux logs: ```/var/log/syslog```
 
 Use ```journalctl -b0  /usr/bin/gnome-shell |grep -i transparent.*window``` to inspect logs.
+#### Logging Level
+Different logging levels can be configured. Set "Log Verbose Level" to "Debug" to get detailed log. 
+
+### Reload Gnome shell
+You may need to reload gnome shell to test and debug extension changes.
+Press Alt-F2, type **r**, then hit Enter to reload gnome shell.
 
 
 ## Reference

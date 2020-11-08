@@ -1,6 +1,7 @@
 ### System information
 - **OS Platform and Distribution (e.g., Linux Ubuntu 16.04)**:
 - **GNOME version**:
+- **Display Server(X11/Wayland)**:
 - **Exact command to reproduce**:
 
 You can obtain the GNOME version by:
