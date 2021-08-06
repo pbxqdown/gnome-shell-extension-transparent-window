@@ -14,19 +14,31 @@ const Convenience = Me.imports.convenience;
 const setting = Convenience.getSettings();
 
 const Gdk = imports.gi.Gdk;
-const Keymap = Gdk.Keymap.get_default();
 
 let ModifierKeyWidget;
 let startTime = 0;
 let maxKeysCode = 0;
+let keymap, sig_keymap;
 
 function init(){
   Convenience.initTranslations('transparent-window');
-  sig_keymap = Keymap.connect('state_changed', onHotkeyPressed);
+
+  GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, () => {
+    const display = Gdk.Display.get_default();
+
+    if (display !== null) {
+      keymap = Gdk.Keymap.get_for_display(display);
+      sig_keymap = keymap.connect('state_changed', onHotkeyPressed);
+
+      return GLib.SOURCE_REMOVE;
+    }
+
+    return true;
+  });
 }
 
 function onHotkeyPressed() {
-  let multiKeysCode = Keymap.get_modifier_state() & (~2);
+  let multiKeysCode = keymap.get_modifier_state() & (~2);
   //new keystroke series coming out, reset startTime and max keyscode
   if(Date.now() - startTime > 500) {
     startTime = Date.now();
