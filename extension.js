@@ -159,10 +159,10 @@ function enable() {
       keymap = Gdk.Keymap.get_for_display(display);
       sig_keymap = keymap.connect('state_changed', onHotkeyPressed);
 
-      return GLib.SOURCE_REMOVE;
+      return GLib.SOURCE_REMOVE; // destroy task
     }
 
-    return true;
+    return true; // repeat task
   });
 
   sig_verbose_level = setting.connect('changed::verbose-level', ()=>{Log.setLevel(setting.get_int('verbose-level'))});
