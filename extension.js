@@ -40,6 +40,7 @@ let sig_verbose_level;
 let sig_modifier_key;
 let modifier_key;
 let gnome_at_least_3_34;
+let gnome_at_least_3_38;
 
 
 //TODO: Add "About" page. Add config for minimum opacity and step.
@@ -152,6 +153,7 @@ function onHotkeyPressed() {
 }
 
 function enable() {
+  //Periodically get GDK display until success.This would fix "Keymap is null" issue on Wayland 
   GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, () => {
     const display = Gdk.Display.get_default();
 
