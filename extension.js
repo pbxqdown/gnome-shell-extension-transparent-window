@@ -9,7 +9,7 @@ const Clutter = imports.gi.Clutter;
 const Layout = imports.ui.layout;
 
 const Gdk = imports.gi.Gdk;
-const Keymap = Gdk.Keymap.get_default();
+const GLib = imports.gi.GLib;
 
 //logger
 const currentExtension = ExtensionUtils.getCurrentExtension();
@@ -29,7 +29,7 @@ function isVersionGreaterOrEqual(major, minor) {
     return true;
 }
 
-let text, button, settings, win_actor, overlayContainer, overlay, sig_scroll, sig_keymap;
+let text, button, settings, win_actor, overlayContainer, overlay, sig_scroll, keymap, sig_keymap;
 let step = 5;
 let min_opacity = 20;
 let overlayExists = false; //ensure only one overlay is created
@@ -137,7 +137,7 @@ function destroyOverlay() {
 function onHotkeyPressed() {
   Log.debug("Hot key pressed");
   //Clear the lock bit so the status of Caps_Lock won't affect the functionality
-  let multiKeysCode = Keymap.get_modifier_state() & (~2);
+  let multiKeysCode = keymap.get_modifier_state() & (~2);
   Log.debug(multiKeysCode);
   switch(multiKeysCode) {
     case modifier_key:
@@ -152,15 +152,29 @@ function onHotkeyPressed() {
 }
 
 function enable() {
-  sig_keymap = Keymap.connect('state_changed', onHotkeyPressed);
+  GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, () => {
+    const display = Gdk.Display.get_default();
+
+    if (display !== null) {
+      keymap = Gdk.Keymap.get_for_display(display);
+      sig_keymap = keymap.connect('state_changed', onHotkeyPressed);
+
+      return GLib.SOURCE_REMOVE; // destroy task
+    }
+
+    return true; // repeat task
+  });
 
   sig_verbose_level = setting.connect('changed::verbose-level', ()=>{Log.setLevel(setting.get_int('verbose-level'))});
   sig_modifier_key = setting.connect('changed::modifier-key', ()=> {modifier_key = setting.get_int('modifier-key');});
 }
 
 function disable() {
-  Keymap.disconnect(sig_keymap);
-  sig_keymap = null;
+  if (keymap && sig_keymap) {
+    keymap.disconnect(sig_keymap);
+  }
+  [keymap, sig_keymap] = [null, null];
+
   setting.disconnect(sig_verbose_level);
   sig_verbose_level = null;
   setting.disconnect(sig_modifier_key);
