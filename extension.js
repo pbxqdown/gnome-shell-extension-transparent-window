@@ -42,6 +42,8 @@ let modifier_key;
 let gnome_at_least_3_34;
 let gnome_at_least_3_38;
 
+let keymap_timeout_id;
+
 
 //TODO: Add "About" page. Add config for minimum opacity and step.
 function init() {
@@ -154,7 +156,7 @@ function onHotkeyPressed() {
 
 function enable() {
   //Periodically get GDK display until success.This would fix "Keymap is null" issue on Wayland 
-  GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, () => {
+  keymap_timeout_id = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, () => {
     const display = Gdk.Display.get_default();
 
     if (display !== null) {
@@ -172,6 +174,7 @@ function enable() {
 }
 
 function disable() {
+  GLib.source_remove(keymap_timeout_id);
   if (keymap && sig_keymap) {
     keymap.disconnect(sig_keymap);
   }
