@@ -59,9 +59,9 @@ const TransparentWindowPrefsWidget = new GObject.Class({
     this.set_orientation(Gtk.Orientation.VERTICAL);
 
     //Modifier key code setting
-    let ModifierKeyBox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, margin:10});
+    let ModifierKeyBox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, "margin-start":10});
     let ModifierKeyLabel = new Gtk.Label({label:_("Modifier Key Code:"), xalign:0});
-    ModifierKeyLabel.set_line_wrap(true);
+    ModifierKeyLabel.set_wrap(true);
     ModifierKeyLabel.set_markup("Modifier Key Code:\n<small>Press the key(combination of Ctrl, Alt, Shift and Super key only) you want to use with scroll to change window transparency. Default key code(Alt) is 8.</small>");
     ModifierKeyWidget = new Gtk.SpinButton();
     ModifierKeyWidget.set_sensitive(true);
@@ -71,12 +71,12 @@ const TransparentWindowPrefsWidget = new GObject.Class({
     ModifierKeyWidget.connect('value-changed', function(w) {
       setting.set_int('modifier-key', w.get_value_as_int());
     });
-    ModifierKeyBox.pack_start(ModifierKeyLabel, true, true, 0);
-    ModifierKeyBox.add(ModifierKeyWidget);
-    this.add(ModifierKeyBox);
+    ModifierKeyBox.prepend(ModifierKeyLabel, true, true, 0);
+    ModifierKeyBox.append(ModifierKeyWidget);
+    this.append(ModifierKeyBox);
 
     //Log verbose level setting
-    let LogLevelBox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, margin: 10});
+    let LogLevelBox = new Gtk.Box({orientation: Gtk.Orientation.HORIZONTAL, "margin-start": 10});
     let LogLevelLabel = new Gtk.Label({label:_("Log Verbose Level:"), xalign:0});
     let LogLevelWidget = new Gtk.ComboBoxText();
     let levels = {0:_("Debug"), 1:_("Info"), 2:_("Warn"), 3:_("Error")};
@@ -87,17 +87,15 @@ const TransparentWindowPrefsWidget = new GObject.Class({
     LogLevelWidget.connect('changed', function(comboWidget) {
       setting.set_int('verbose-level', comboWidget.get_active());
     });
-    LogLevelBox.pack_start(LogLevelLabel, true, true, 0);
-    LogLevelBox.add(LogLevelWidget);
-    this.add(LogLevelBox);
+    LogLevelBox.prepend(LogLevelLabel, true, true, 0);
+    LogLevelBox.append(LogLevelWidget);
+    this.append(LogLevelBox);
   },
 });
 
 
 function buildPrefsWidget(){
   let widget = new TransparentWindowPrefsWidget();
-
-  widget.show_all();
 
   return widget;
 }
