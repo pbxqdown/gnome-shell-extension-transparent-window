@@ -19,15 +19,8 @@ const Logger = currentExtension.imports.logger.Logger;
 const Convenience = currentExtension.imports.convenience;
 let setting = Convenience.getSettings();
 
-//Gnome version check
-function isVersionGreaterOrEqual(major, minor) {
-    let lis = imports.misc.config.PACKAGE_VERSION.split('.');
-    if (parseInt(lis[0]) > major) return true;
-    if (parseInt(lis[0]) < major) return false;
-    if (parseInt(lis[1]) > minor) return true;
-    if (parseInt(lis[1]) < minor) return false;
-    return true;
-}
+const Utils = Me.imports.utils;
+const isVersionGreaterOrEqual = Utils.isVersionGreaterOrEqual;
 
 let text, button, settings, win_actor, overlayContainer, overlay, sig_scroll, keymap, sig_keymap;
 let step = 5;
@@ -41,6 +34,7 @@ let sig_modifier_key;
 let modifier_key;
 let gnome_at_least_3_34;
 let gnome_at_least_3_38;
+let gnome_at_least_40_1;
 
 let keymap_timeout_id;
 
