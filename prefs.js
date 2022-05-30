@@ -136,5 +136,9 @@ const TransparentWindowPrefsWidget = new GObject.Class({
 function buildPrefsWidget(){
   let widget = new TransparentWindowPrefsWidget();
 
+  if (!gnome_at_least_40_1) {
+    widget.show_all();
+  }
+
   return widget;
 }
