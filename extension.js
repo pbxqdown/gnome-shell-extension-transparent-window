@@ -55,7 +55,6 @@ function init() {
   // gnome 3.38 includes syntax changes to creating new overlay. 
   // this will be used later to decide which method to use in createOverlay 
   gnome_at_least_3_38 = isVersionGreaterOrEqual(3, 38);
-  gnome_at_least_40_1 = isVersionGreaterOrEqual(40, 1);
 }
 
 function getMouseHoveredWindowActor() {
@@ -111,7 +110,7 @@ function createOverlay() {
   Main.layoutManager.addChrome(overlayContainer, {affectsInputRegion: false});
   
   // check gnome version to determine correct call to create new overlay 
-  if (gnome_at_least_40_1) {
+  if (gnome_at_least_3_38) {
     overlay = new St.Bin({ style_class: '', reactive: true, can_focus: true, x_expand: true, y_expand: false, track_hover: true });
   } else {
     overlay = new St.Bin({ style_class: '', reactive: true, can_focus: true, x_fill: true, y_fill: false, track_hover: true });
