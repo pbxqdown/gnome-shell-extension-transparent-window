@@ -15,21 +15,15 @@ const setting = Convenience.getSettings();
 
 const Gdk = imports.gi.Gdk;
 
+const Utils = Me.imports.utils;
+const isVersionGreaterOrEqual = Utils.isVersionGreaterOrEqual;
+
 let ModifierKeyWidget;
 let startTime = 0;
 let maxKeysCode = 0;
 let keymap, sig_keymap;
 let gnome_at_least_40_1;
 
-//Gnome version check
-function isVersionGreaterOrEqual(major, minor) {
-  let lis = imports.misc.config.PACKAGE_VERSION.split('.');
-  if (parseInt(lis[0]) > major) return true;
-  if (parseInt(lis[0]) < major) return false;
-  if (parseInt(lis[1]) > minor) return true;
-  if (parseInt(lis[1]) < minor) return false;
-  return true;
-}
 
 function init(){
   Convenience.initTranslations('transparent-window');
