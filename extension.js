@@ -17,7 +17,7 @@ const Logger = currentExtension.imports.logger.Logger;
 
 //setting
 const Convenience = currentExtension.imports.convenience;
-let setting = Convenience.getSettings();
+let setting;
 
 const Utils = Me.imports.utils;
 const isVersionGreaterOrEqual = Utils.isVersionGreaterOrEqual;
@@ -41,13 +41,7 @@ let keymap_timeout_id;
 
 //TODO: Add "About" page. Add config for minimum opacity and step.
 function init() {
-  Log = new Logger("TransparentWindow", setting.get_int('verbose-level'));
-  modifier_key = setting.get_int('modifier-key');
-  Log.debug("Gnome version:" + imports.misc.config.PACKAGE_VERSION);
-  gnome_at_least_3_34 = isVersionGreaterOrEqual(3, 34);
-  // gnome 3.38 includes syntax changes to creating new overlay. 
-  // this will be used later to decide which method to use in createOverlay 
-  gnome_at_least_3_38 = isVersionGreaterOrEqual(3, 38);
+  
 }
 
 function getMouseHoveredWindowActor() {
@@ -149,6 +143,15 @@ function onHotkeyPressed() {
 }
 
 function enable() {
+  setting = Convenience.getSettings();
+  Log = new Logger("TransparentWindow", setting.get_int('verbose-level'));
+  modifier_key = setting.get_int('modifier-key');
+  Log.debug("Gnome version:" + imports.misc.config.PACKAGE_VERSION);
+  gnome_at_least_3_34 = isVersionGreaterOrEqual(3, 34);
+  // gnome 3.38 includes syntax changes to creating new overlay. 
+  // this will be used later to decide which method to use in createOverlay 
+  gnome_at_least_3_38 = isVersionGreaterOrEqual(3, 38);
+
   //Periodically get GDK display until success.This would fix "Keymap is null" issue on Wayland 
   keymap_timeout_id = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, () => {
     const display = Gdk.Display.get_default();
@@ -172,10 +175,11 @@ function disable() {
   if (keymap && sig_keymap) {
     keymap.disconnect(sig_keymap);
   }
-  [keymap, sig_keymap] = [null, null];
 
   setting.disconnect(sig_verbose_level);
   sig_verbose_level = null;
   setting.disconnect(sig_modifier_key);
   sig_modifier_key = null;
+
+  [keymap, sig_keymap, keymap_timeout_id, setting, Log] = [null, null, null, null, null];
 }
