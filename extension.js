@@ -128,7 +128,7 @@ function destroyOverlay() {
 function onHotkeyPressed() {
   Log.debug("Hot key pressed");
   //Clear the lock bit so the status of Caps_Lock won't affect the functionality
-  let multiKeysCode = keymap.get_modifier_state() & (~2);
+  let multiKeysCode = keymap.get_modifier_state() & (~(2 | 16));
   Log.debug(multiKeysCode);
   switch(multiKeysCode) {
     case modifier_key:
