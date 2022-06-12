@@ -21,6 +21,7 @@ let setting;
 
 const Utils = Me.imports.utils;
 const isVersionGreaterOrEqual = Utils.isVersionGreaterOrEqual;
+const getMultiKeysCode = Utils.getMultiKeysCode;
 
 let text, button, settings, win_actor, overlayContainer, overlay, sig_scroll, keymap, sig_keymap;
 let step = 5;
@@ -127,8 +128,7 @@ function destroyOverlay() {
 
 function onHotkeyPressed() {
   Log.debug("Hot key pressed");
-  //Clear the lock bit so the status of Caps_Lock won't affect the functionality
-  let multiKeysCode = keymap.get_modifier_state() & (~2);
+  const multiKeysCode = getMultiKeysCode(keymap);
   Log.debug(multiKeysCode);
   switch(multiKeysCode) {
     case modifier_key:

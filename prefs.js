@@ -17,6 +17,7 @@ const Gdk = imports.gi.Gdk;
 
 const Utils = Me.imports.utils;
 const isVersionGreaterOrEqual = Utils.isVersionGreaterOrEqual;
+const getMultiKeysCode = Utils.getMultiKeysCode;
 
 let ModifierKeyWidget;
 let startTime = 0;
@@ -45,7 +46,7 @@ function init(){
 }
 
 function onHotkeyPressed() {
-  let multiKeysCode = keymap.get_modifier_state() & (~2);
+  const multiKeysCode = getMultiKeysCode(keymap);
   //new keystroke series coming out, reset startTime and max keyscode
   if(Date.now() - startTime > 500) {
     startTime = Date.now();
