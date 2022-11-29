@@ -9,9 +9,10 @@
     "3.38.4",
     "40",
     "41",
-    "42"
+    "42",
+    "43"
   ],
   "url": "https://github.com/pbxqdown/gnome-shell-extension-transparent-window",
   "uuid": "transparent-window@pbxqdown.github.com",
-  "version": 10
+  "version": 11
 }
