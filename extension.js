@@ -117,8 +117,8 @@ function destroyOverlay() {
       overlay[0].disconnect(overlay[1]);
       overlay[0].destroy();
     }
+    overlays = [];
   }
-  overlays = [];
   overlayExists = false;
 }
 
