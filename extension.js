@@ -23,7 +23,8 @@ const Utils = Me.imports.utils;
 const isVersionGreaterOrEqual = Utils.isVersionGreaterOrEqual;
 const getMultiKeysCode = Utils.getMultiKeysCode;
 
-let text, button, settings, win_actor, overlayContainer, overlay, sig_scroll, keymap, sig_keymap;
+let text, button, settings, win_actor, keymap, sig_keymap;
+let overlays = [];
 let step = 5;
 let min_opacity = 20;
 let overlayExists = false; //ensure only one overlay is created
@@ -86,30 +87,23 @@ function onScroll(actor, event) {
   return Clutter.EVENT_STOP;
 }
 
-
 function createOverlay() {
   if(overlayExists) return;
   Log.debug("overlay created");
-  overlayContainer = new St.Widget({
-    clip_to_allocation: true,
-    layout_manager: new Clutter.BinLayout()
-  });
-  overlayContainer.add_constraint(new Layout.MonitorConstraint({primary: true, work_area: true}));
-  Main.layoutManager.addChrome(overlayContainer, {affectsInputRegion: false});
-  
-  // check gnome version to determine correct call to create new overlay 
-  if (gnome_at_least_3_38) {
-    overlay = new St.Bin({ style_class: '', reactive: true, can_focus: true, x_expand: true, y_expand: false, track_hover: true });
-  } else {
-    overlay = new St.Bin({ style_class: '', reactive: true, can_focus: true, x_fill: true, y_fill: false, track_hover: true });
-  };
-  //TODO:support multi-monitor
-  let monitor = Main.layoutManager.primaryMonitor;
-  overlay.set_size(monitor.width, monitor.height);
-  overlay.set_position(0, 0);
-  sig_scroll = overlay.connect("scroll-event", onScroll);
-  overlayContainer.add_actor(overlay);
-  Main.layoutManager.trackChrome(overlay, {affectsInputRegion: true});
+  for (let monitor of Main.layoutManager.monitors) {
+    let overlay;
+    // check gnome version to determine correct call to create new overlay 
+    if (gnome_at_least_3_38) {
+      overlay = new St.Bin({ style_class: '', reactive: true, can_focus: true, x_expand: true, y_expand: false, track_hover: true });
+    } else {
+      overlay = new St.Bin({ style_class: '', reactive: true, can_focus: true, x_fill: true, y_fill: false, track_hover: true });
+    };
+    overlay.set_size(monitor.width, monitor.height);
+    overlay.set_position(monitor.x, monitor.y);
+    let sig_scroll = overlay.connect("scroll-event", onScroll);
+    Main.layoutManager.addChrome(overlay);
+    overlays.push([overlay, sig_scroll]);
+  }
 
   overlayExists = true;
 }
@@ -117,12 +111,14 @@ function createOverlay() {
 function destroyOverlay() {
   if(!overlayExists) return;
   Log.debug("overlay destroyed");
-  if(overlayContainer) Main.layoutManager.removeChrome(overlayContainer);
-  if(overlay) Main.layoutManager.untrackChrome(overlay);
-  if(overlay && sig_scroll) overlay.disconnect(sig_scroll);
-  sig_scroll = null;
-  if(overlay) overlay.destroy();
-  if(overlayContainer) overlayContainer.destroy();
+  if(overlays.length !== 0) {
+    for (let overlay of overlays) {
+      Main.layoutManager.removeChrome(overlay[0]);
+      overlay[0].disconnect(overlay[1]);
+      overlay[0].destroy();
+    }
+    overlays = [];
+  }
   overlayExists = false;
 }
 
