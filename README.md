@@ -43,6 +43,8 @@ Project location: [https://gitlab.gnome.org/GNOME/gnome-shell/](https://gitlab.g
 This is Gnome-shell's Clutter-based toolkit that defines useful actors. Examples are StBin, StButton, etc.
 
 ## Debugging
+After extension is installed, source code is located under `~/.local/share/gnome-shell/extensions`. The extension can be modified and tested there.
+
 ### Looking Glass
 Looking Glass is GNOME Shell's integrated debugger and inspector tool. It would be helpful to debug any issue of the extension.
 #### Usage
