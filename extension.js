@@ -71,14 +71,23 @@ function onScroll(actor, event) {
   let opacity = win_actor.get_opacity();
 
   let dir = event.get_scroll_direction();
-  Log.debug(dir);
+  Log.debug("dir: " + dir);
+
   switch(dir) {
     case Clutter.ScrollDirection.UP:
       opacity += step;
       break;
+
     case Clutter.ScrollDirection.DOWN:
       opacity -= step;
       break;
+
+    case Clutter.ScrollDirection.SMOOTH:
+      let [,ydelta] = event.get_scroll_delta();
+      Log.debug("delta: " + ydelta);
+      opacity -= step * ydelta;
+      break;
+
     default:
       return Clutter.EVENT_PROPAGATE;
   }
