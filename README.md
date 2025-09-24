@@ -42,6 +42,15 @@ Project location: [https://gitlab.gnome.org/GNOME/gnome-shell/](https://gitlab.g
 #### ST(Shell Toolkit)
 This is Gnome-shell's Clutter-based toolkit that defines useful actors. Examples are StBin, StButton, etc.
 
+## Testing
+### Testing Steps
+1. Use `make test-deploy` command to deploy changes locally.
+2. Enable dev-transparent-window extension, disable production extension.
+3. Test transparency changes.
+4. Test prefs panel and shortcut key functionality.
+5. Test extension enable/disable operations.
+6. Check logs for errors: `sudo journalctl -f /usr/bin/gnome-shell`
+
 ## Debugging
 After extension is installed, source code is located under `~/.local/share/gnome-shell/extensions`. The extension can be modified and tested there.
 
