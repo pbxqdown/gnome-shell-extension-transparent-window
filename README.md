@@ -1,4 +1,8 @@
 # gnome-shell-extension-transparent-window
+
+> **🚀 New Version Available!**  
+> This version uses Alt+scroll for transparency. For a click-to-toggle version with preferences panel and GNOME 44+ support, check out the **[transparent-window-v2 branch](https://github.com/pbxqdown/gnome-shell-extension-transparent-window/tree/transparent-window-v2)**.
+
 ## Summary
 The extension will change the opacity of window through simple mouse/keyboard operation.
 
