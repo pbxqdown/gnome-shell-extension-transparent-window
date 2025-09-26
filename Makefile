@@ -1,12 +1,24 @@
+# Transparent Window GNOME Shell Extension Makefile
+
 # Build extension package
 build:
-	zip -r transparent-window.zip schemas convenience.js extension.js icon.jpg logger.js metadata.json prefs.js utils.js
+	@echo "Building extension package..."
+	@glib-compile-schemas schemas/
+	@zip -r transparent-window.zip schemas/ extension.js prefs.js icon.jpg metadata.json
+	@echo "Package built: transparent-window.zip"
 
-# Deploy to shell extension folder and modify metadata file to get a local test extension. Press Alt+F2 then type 'r' to restart gnome shell to enable this test extension
+# Deploy to shell extension folder for testing
 test-deploy:
-	rsync -a --info=progress2 --delete . ~/.local/share/gnome-shell/extensions/dev-transparent-window@pbxqdown.github.com
-	sed -i 's/transparent-window@pbxqdown.github.com/dev-transparent-window@pbxqdown.github.com/g;s/Transparent Window/Dev Transparent Window/g' ~/.local/share/gnome-shell/extensions/dev-transparent-window@pbxqdown.github.com/metadata.json
+	@echo "Deploying extension for testing..."
+	@glib-compile-schemas schemas/
+	@rsync -a --info=progress2 --delete . ~/.local/share/gnome-shell/extensions/dev-transparent-window@pbxqdown.github.com
+	@sed -i 's/transparent-window@pbxqdown.github.com/dev-transparent-window@pbxqdown.github.com/g;s/Transparent Window/Dev Transparent Window/g' ~/.local/share/gnome-shell/extensions/dev-transparent-window@pbxqdown.github.com/metadata.json
+	@echo "Extension deployed. Restart gnome shell to make it take effect."
 
 # Clean test deployment
-test-deploy-clean:
-	rm -rf ~/.local/share/gnome-shell/extensions/dev-transparent-window@pbxqdown.github.com
+test-clean:
+	@echo "Cleaning test deployment..."
+	@rm -rf ~/.local/share/gnome-shell/extensions/dev-transparent-window@pbxqdown.github.com
+	@echo "Test deployment cleaned."
+
+.PHONY: build test-deploy test-clean

@@ -1,18 +1,17 @@
 {
   "name": "Transparent Window",
-  "description": "Change the opacity of windows by compiz-style shortcut Alt+scroll.\nYou can customize hotkey in Preference page if Alt key doesn't work.",
-  "settings-schema": "org.gnome.shell.extensions.TransparentWindow",
+  "description": "Toggle window transparency with a single click. Click the panel icon to make the focused window transparent or restore its opacity. Configure transparency level in preferences.",
   "shell-version": [
-    "3.28.1",
-    "3.36.1",
-    "3.38.1",
-    "3.38.4",
-    "40",
-    "41",
-    "42",
-    "43"
+    "44",
+    "45",
+    "46",
+    "47",
+    "48",
+    "49"
   ],
   "url": "https://github.com/pbxqdown/gnome-shell-extension-transparent-window",
   "uuid": "transparent-window@pbxqdown.github.com",
-  "version": 14
+  "version": 15,
+  "settings-schema": "org.gnome.shell.extensions.transparent-window",
+  "gettext-domain": "transparent-window"
 }

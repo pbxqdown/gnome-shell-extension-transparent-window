@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.transparent-window" path="/org/gnome/shell/extensions/transparent-window/">
+    <key name="opacity-level" type="i">
+      <default>50</default>
+      <summary>Window Opacity</summary>
+      <description>Opacity level for windows (0-100%, where 0% is fully transparent and 100% is fully opaque)</description>
+      <range min="0" max="100"/>
+    </key>
+    <key name="debug-mode" type="b">
+      <default>false</default>
+      <summary>Debug Mode</summary>
+      <description>Enable debug logging to console for troubleshooting</description>
+    </key>
+  </schema>
+</schemalist>
