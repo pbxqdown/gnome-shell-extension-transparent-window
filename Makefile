@@ -1,5 +1,6 @@
 # Build extension package
 build:
+	rm -f transparent-window.zip
 	zip -r transparent-window.zip schemas convenience.js extension.js icon.jpg logger.js metadata.json prefs.js utils.js
 
 # Deploy to shell extension folder and modify metadata file to get a local test extension. Press Alt+F2 then type 'r' to restart gnome shell to enable this test extension
