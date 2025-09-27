@@ -2,7 +2,6 @@
   "name": "Transparent Window",
   "description": "Toggle window transparency with a single click. Click the panel icon to make the focused window transparent or restore its opacity. Configure transparency level in preferences.",
   "shell-version": [
-    "44",
     "45",
     "46",
     "47",

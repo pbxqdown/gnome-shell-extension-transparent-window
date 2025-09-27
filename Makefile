@@ -5,7 +5,7 @@ build:
 	@echo "Building extension package..."
 	@rm -f transparent-window.zip
 	@glib-compile-schemas schemas/
-	@zip -r transparent-window.zip schemas/ extension.js prefs.js icon.jpg metadata.json
+	@zip -r transparent-window.zip schemas/*.xml extension.js prefs.js icon.jpg metadata.json
 	@echo "Package built: transparent-window.zip"
 
 # Deploy to shell extension folder for testing

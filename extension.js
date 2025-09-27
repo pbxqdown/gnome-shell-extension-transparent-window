@@ -63,6 +63,8 @@ export default class TransparentWindowExtension extends Extension {
             this._indicator = null;
         }
         
+        this._settings = null;
+        
         this._debug('TransparentWindow: Extension disabled successfully');
     }
     
