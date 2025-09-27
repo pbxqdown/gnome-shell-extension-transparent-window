@@ -11,7 +11,7 @@
   ],
   "url": "https://github.com/pbxqdown/gnome-shell-extension-transparent-window",
   "uuid": "transparent-window@pbxqdown.github.com",
-  "version": 15,
+  "version": 16,
   "settings-schema": "org.gnome.shell.extensions.transparent-window",
   "gettext-domain": "transparent-window"
 }
