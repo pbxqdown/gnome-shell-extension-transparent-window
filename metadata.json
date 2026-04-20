@@ -6,11 +6,12 @@
     "46",
     "47",
     "48",
-    "49"
+    "49",
+    "50"
   ],
   "url": "https://github.com/pbxqdown/gnome-shell-extension-transparent-window",
   "uuid": "transparent-window@pbxqdown.github.com",
-  "version": 16,
+  "version": 17,
   "settings-schema": "org.gnome.shell.extensions.transparent-window",
   "gettext-domain": "transparent-window"
 }
