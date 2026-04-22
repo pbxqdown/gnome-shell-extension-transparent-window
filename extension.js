@@ -20,7 +20,7 @@ const Indicator = GObject.registerClass({
             style_class: 'system-status-icon',
         });
         this.add_child(this._icon);
-        
+
         // Connect left-click to toggle transparency
         this.connect('button-press-event', (actor, event) => {
             if (event.get_button() === 1) { // Left click
@@ -43,6 +43,9 @@ export default class TransparentWindowExtension extends Extension {
         // Create and add panel indicator
         this._indicator = new Indicator(this.metadata.path);
         Main.panel.addToStatusArea(this.uuid, this._indicator);
+
+        // Make sure button-press-event is propagated correctly on gnome 49 and 50        
+        this._indicator.clear_actions()
         
         // Initialize state
         this._originalOpacity = null;
