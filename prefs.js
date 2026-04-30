@@ -12,6 +12,45 @@ export default class TransparentWindowPreferences extends ExtensionPreferences {
         });
         window.add(page);
 
+        // Hotkey Settings Group ---
+        const hotkeyGroup = new Adw.PreferencesGroup({
+            title: 'Keyboard Shortcuts',
+            description: 'Configure bindings to manipulate transparency.',
+        });
+        page.add(hotkeyGroup);
+
+        const hotkeyRow = new Adw.EntryRow({
+            title: 'Toggle Hotkey',
+            text: settings.get_string('toggle-hotkey'),
+        });
+
+        const hotkeyRow2 = new Adw.EntryRow({
+            title: 'Increase Opacity',
+            text: settings.get_string('increase-window-opacity'),
+        });
+
+        const hotkeyRow3 = new Adw.EntryRow({
+            title: 'Decrease Opacity',
+            text: settings.get_string('decrease-window-opacity'),
+        });
+
+        hotkeyRow.connect('apply', () => {
+            settings.set_string('toggle-hotkey', hotkeyRow.get_text());
+        });
+
+        hotkeyRow2.connect('apply', () => {
+            settings.set_string('increase-window-opacity', hotkeyRow2.get_text());
+        });
+
+        hotkeyRow3.connect('apply', () => {
+            settings.set_string('decrease-window-opacity', hotkeyRow3.get_text());
+        });
+
+        hotkeyGroup.add(hotkeyRow);
+        hotkeyGroup.add(hotkeyRow2);
+        hotkeyGroup.add(hotkeyRow3);
+        // ----------------------------------
+
         // Opacity Settings Group
         const opacityGroup = new Adw.PreferencesGroup({
             title: 'Opacity Settings',
@@ -35,7 +74,27 @@ export default class TransparentWindowPreferences extends ExtensionPreferences {
         });
 
         opacityRow.add_suffix(slider);
-        opacityRow.set_activatable_widget(slider);
+        // ----------------------------------
+
+        // Cycle Settings Group
+        const cycleRow = new Adw.ActionRow({
+            title: 'Cycle Rate',
+            subtitle: 'Set the rate at which windows cycle through opacity levels (1 alpha level per millisecond * rate).',
+        });
+        // adding to opacityGroup for convenience
+        opacityGroup.add(cycleRow);
+
+        const cycleSlider = Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 0, 2000, 1);
+        cycleSlider.set_hexpand(true);
+        cycleSlider.set_draw_value(true);
+        cycleSlider.set_value(settings.get_int('cycle-rate'));
+
+        cycleSlider.connect('value-changed', () => {
+            settings.set_int('cycle-rate', slider.get_value());
+        });
+
+        cycleRow.add_suffix(cycleSlider);       opacityRow.set_activatable_widget(slider);
+        // ----------------------------------
 
         // Debug Settings Group
         const debugGroup = new Adw.PreferencesGroup({

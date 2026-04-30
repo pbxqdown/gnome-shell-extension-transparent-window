@@ -1,16 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema id="org.gnome.shell.extensions.transparent-window" path="/org/gnome/shell/extensions/transparent-window/">
+
+    <key name="toggle-hotkey" type="as">
+      <default><![CDATA[['<Ctrl>Return']]]></default>
+      <summary>Hotkey to toggle window transparency</summary>
+      <description>Keybinding used to toggle the transparency of the focused window.</description>
+    </key>
+
+    <key name="increase-window-opacity" type="as">
+      <default><![CDATA[['<Ctrl>0']]]></default>
+      <summary>Hotkey to toggle window transparency</summary>
+      <description>Keybinding used to toggle the transparency of the focused window.</description>
+    </key>
+
+    <key name="decrease-window-opacity" type="as">
+      <default><![CDATA[['<Ctrl>9']]]></default>
+      <summary>Hotkey to toggle window transparency</summary>
+      <description>Keybinding used to toggle the transparency of the focused window.</description>
+    </key>
+
     <key name="opacity-level" type="i">
       <default>50</default>
-      <summary>Window Opacity</summary>
-      <description>Opacity level for windows (0-100%, where 0% is fully transparent and 100% is fully opaque)</description>
-      <range min="0" max="100"/>
+      <summary>Opacity level (percent)</summary>
+      <description>Transparency level when making a window transparent (0-100).</description>
     </key>
+
+    <key name="cycle-rate" type="i">
+      <default>100</default>
+      <summary>Cycle Rate</summary>
+      <description>Cycle speed when opacity hotkey is held</description>
+    </key>
+
     <key name="debug-mode" type="b">
       <default>false</default>
-      <summary>Debug Mode</summary>
-      <description>Enable debug logging to console for troubleshooting</description>
+      <summary>Enable debug logging</summary>
+      <description>When true, the extension prints debug messages to the journal.</description>
     </key>
   </schema>
 </schemalist>
