@@ -15,13 +15,13 @@ export default class TransparentWindowPreferences extends ExtensionPreferences {
         // Opacity Settings Group
         const opacityGroup = new Adw.PreferencesGroup({
             title: 'Opacity Settings',
-            description: 'Configure the transparency level for windows.',
+            description: 'Click the panel icon to toggle the focused window between this opacity and fully opaque.',
         });
         page.add(opacityGroup);
 
         const opacityRow = new Adw.ActionRow({
             title: 'Opacity Level',
-            subtitle: 'Set the default opacity for transparent windows (0% = fully transparent, 100% = fully opaque)',
+            subtitle: 'Opacity used when toggling via the panel icon (0% = fully transparent, 100% = fully opaque)',
         });
         opacityGroup.add(opacityRow);
 
@@ -36,6 +36,27 @@ export default class TransparentWindowPreferences extends ExtensionPreferences {
 
         opacityRow.add_suffix(slider);
         opacityRow.set_activatable_widget(slider);
+
+        // Alt+Scroll Trigger Group
+        const scrollGroup = new Adw.PreferencesGroup({
+            title: 'Scroll Transparency',
+            description: 'Hold this modifier and scroll over a window to change its opacity.',
+        });
+        page.add(scrollGroup);
+
+        const modValues = ['alt', 'super', 'ctrl', 'shift', 'altgr'];
+        const modLabels = ['Alt', 'Super', 'Ctrl', 'Shift', 'AltGr'];
+        const modRow = new Adw.ComboRow({
+            title: 'Modifier Key',
+            subtitle: 'Modifier held while scrolling to adjust window transparency',
+            model: Gtk.StringList.new(modLabels),
+        });
+        const currentMod = settings.get_string('modifier-key');
+        modRow.set_selected(Math.max(0, modValues.indexOf(currentMod)));
+        modRow.connect('notify::selected', () => {
+            settings.set_string('modifier-key', modValues[modRow.get_selected()]);
+        });
+        scrollGroup.add(modRow);
 
         // Debug Settings Group
         const debugGroup = new Adw.PreferencesGroup({
