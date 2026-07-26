@@ -1,0 +1,9 @@
+{
+  "name": "gnome-shell-extension-transparent-window",
+  "private": true,
+  "type": "module",
+  "description": "Dev-only tooling (unit tests) for the Transparent Window extension. Not shipped in the extension package.",
+  "scripts": {
+    "test": "node --test"
+  }
+}

@@ -1,15 +1,20 @@
 # Transparent Window GNOME Shell Extension Makefile
 
-# Build extension package
-build:
+# Run unit tests (pure logic, no GNOME Shell required)
+test:
+	@echo "Running unit tests..."
+	@node --test
+
+# Build extension package (runs unit tests first)
+build: test
 	@echo "Building extension package..."
 	@rm -f transparent-window.zip
 	@glib-compile-schemas schemas/
-	@zip -r transparent-window.zip schemas/*.xml extension.js prefs.js icon.jpg metadata.json
+	@zip -r transparent-window.zip schemas/*.xml extension.js prefs.js icon.jpg metadata.json lib/*.js
 	@echo "Package built: transparent-window.zip"
 
-# Deploy to shell extension folder for testing
-test-deploy:
+# Deploy to shell extension folder for testing (runs unit tests first)
+test-deploy: test
 	@echo "Deploying extension for testing..."
 	@glib-compile-schemas schemas/
 	@rsync -a --info=progress2 --delete . ~/.local/share/gnome-shell/extensions/dev-transparent-window@pbxqdown.github.com
@@ -22,4 +27,4 @@ test-clean:
 	@rm -rf ~/.local/share/gnome-shell/extensions/dev-transparent-window@pbxqdown.github.com
 	@echo "Test deployment cleaned."
 
-.PHONY: build test-deploy test-clean
+.PHONY: test build test-deploy test-clean

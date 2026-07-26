@@ -12,5 +12,22 @@
       <summary>Debug Mode</summary>
       <description>Enable debug logging to console for troubleshooting</description>
     </key>
+    <key name="opacity-step" type="i">
+      <default>5</default>
+      <summary>Opacity Step</summary>
+      <description>Amount the window opacity changes per scroll tick, on the 0-255 actor opacity scale</description>
+      <range min="1" max="128"/>
+    </key>
+    <key name="min-opacity" type="i">
+      <default>20</default>
+      <summary>Minimum Opacity</summary>
+      <description>Lowest opacity (0-255) reachable via Alt+scroll, to prevent windows becoming invisible</description>
+      <range min="0" max="255"/>
+    </key>
+    <key name="modifier-key" type="s">
+      <default>'alt'</default>
+      <summary>Scroll Modifier Key</summary>
+      <description>Modifier held while scrolling to change window opacity: 'alt', 'super', 'ctrl', 'shift', or 'altgr'</description>
+    </key>
   </schema>
 </schemalist>

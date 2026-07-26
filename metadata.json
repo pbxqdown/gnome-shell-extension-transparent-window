@@ -1,6 +1,6 @@
 {
   "name": "Transparent Window",
-  "description": "Toggle window transparency with a single click. Click the panel icon to make the focused window transparent or restore its opacity. Configure transparency level in preferences.",
+  "description": "Change window transparency two ways: click the panel icon to toggle the focused window's opacity, or hold a modifier key (Alt by default) and scroll the mouse wheel over any window to adjust its opacity.",
   "shell-version": [
     "45",
     "46",
@@ -11,7 +11,7 @@
   ],
   "url": "https://github.com/pbxqdown/gnome-shell-extension-transparent-window",
   "uuid": "transparent-window@pbxqdown.github.com",
-  "version": 17,
+  "version": 18,
   "settings-schema": "org.gnome.shell.extensions.transparent-window",
   "gettext-domain": "transparent-window"
 }
