@@ -53,7 +53,7 @@ export default class TransparentWindowExtension extends Extension {
         this._originalOpacity = null;
         
         // Connect toggle signal
-        this._indicator.connect('toggle-transparency', () => {
+        this._toggleId = this._indicator.connect('toggle-transparency', () => {
             this._toggleWindowTransparency();
         });
 
@@ -88,6 +88,10 @@ export default class TransparentWindowExtension extends Extension {
         this._altHeld = false;
 
         if (this._indicator) {
+            if (this._toggleId) {
+                this._indicator.disconnect(this._toggleId);
+                this._toggleId = null;
+            }
             this._indicator.destroy();
             this._indicator = null;
         }
@@ -124,22 +128,18 @@ export default class TransparentWindowExtension extends Extension {
         // No global "modifier pressed" event exists on GNOME 45+, so poll the
         // live modifier state from the cursor tracker instead (cheap C call).
         // 100ms keeps wakeups low while staying responsive.
+        if (this._pollId) {
+            GLib.source_remove(this._pollId);
+        }
         this._pollId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 100, () => {
-            // Never let an exception kill the timer, or a stuck overlay could
-            // freeze input permanently.
-            try {
-                const [, , mods] = global.get_pointer();
-                const held = !!(mods & this._modMask);
-                if (held && !this._altHeld) {
-                    this._enterScrollMode();
-                } else if (!held && this._altHeld) {
-                    this._exitScrollMode();
-                }
-                this._altHeld = held;
-            } catch (e) {
-                logError(e, 'TransparentWindow: modifier poll');
-                this._exitScrollMode(); // fail safe: never keep input grabbed
+            const [, , mods] = global.get_pointer();
+            const held = !!(mods & this._modMask);
+            if (held && !this._altHeld) {
+                this._enterScrollMode();
+            } else if (!held && this._altHeld) {
+                this._exitScrollMode();
             }
+            this._altHeld = held;
             return GLib.SOURCE_CONTINUE;
         });
     }
@@ -166,16 +166,10 @@ export default class TransparentWindowExtension extends Extension {
             return;
         }
         this._debug('TransparentWindow: releasing scroll capture');
-        // Tear down each overlay defensively: one failure must not leave the
-        // others stuck on screen grabbing input.
         for (const [overlay, sigId] of this._overlays) {
-            try {
-                overlay.disconnect(sigId);
-                Main.layoutManager.removeChrome(overlay);
-                overlay.destroy();
-            } catch (e) {
-                logError(e, 'TransparentWindow: overlay teardown');
-            }
+            overlay.disconnect(sigId);
+            Main.layoutManager.removeChrome(overlay);
+            overlay.destroy();
         }
         this._overlays = [];
     }
