@@ -1,5 +1,6 @@
 import Adw from 'gi://Adw';
 import Gtk from 'gi://Gtk';
+import Gio from 'gi://Gio';
 import {ExtensionPreferences} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 export default class TransparentWindowPreferences extends ExtensionPreferences {
@@ -57,6 +58,36 @@ export default class TransparentWindowPreferences extends ExtensionPreferences {
             settings.set_string('modifier-key', modValues[modRow.get_selected()]);
         });
         scrollGroup.add(modRow);
+
+        // Warn when the chosen modifier collides with GNOME's "Window Action Key"
+        // (org.gnome.desktop.wm.preferences mouse-button-modifier). While that
+        // modifier is held, our scroll overlay grabs pointer events, which would
+        // break click-drag-to-move / click-to-raise for that same key.
+        const wmSettings = new Gio.Settings({schema_id: 'org.gnome.desktop.wm.preferences'});
+        const conflictRow = new Adw.ActionRow({
+            title: 'Conflicts with GNOME’s Window Action Key',
+            subtitle: 'This modifier is also GNOME’s Window Action Key, so holding it to ' +
+                'move (drag) or raise (click) windows won’t work while it’s used here. ' +
+                'Pick a different modifier above, or change the key in GNOME Settings.',
+        });
+        conflictRow.add_prefix(new Gtk.Image({icon_name: 'dialog-warning-symbolic'}));
+        scrollGroup.add(conflictRow);
+
+        const modifierFromWm = value => {
+            if (!value) return null;
+            if (value.includes('Super')) return 'super';
+            if (value.includes('Alt')) return 'alt';
+            if (value.includes('Control') || value.includes('Primary')) return 'ctrl';
+            if (value.includes('Shift')) return 'shift';
+            return null;
+        };
+        const updateConflict = () => {
+            const wmMod = modifierFromWm(wmSettings.get_string('mouse-button-modifier'));
+            conflictRow.visible = wmMod !== null && wmMod === modValues[modRow.get_selected()];
+        };
+        modRow.connect('notify::selected', updateConflict);
+        wmSettings.connect('changed::mouse-button-modifier', updateConflict);
+        updateConflict();
 
         // Debug Settings Group
         const debugGroup = new Adw.PreferencesGroup({

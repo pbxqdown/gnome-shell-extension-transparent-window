@@ -66,8 +66,10 @@ export default class TransparentWindowExtension extends Extension {
             this._modMask = this._modifierMask();
             this._exitScrollMode(); // avoid getting stuck if changed mid-gesture
             this._altHeld = false;
+            this._maybeWarnModifierConflict();
         });
         this._startModifierWatch();
+        this._maybeWarnModifierConflict();
 
         this._debug('TransparentWindow: Extension enabled successfully');
     }
@@ -121,6 +123,27 @@ export default class TransparentWindowExtension extends Extension {
             case 'alt':
             default:
                 return Clutter.ModifierType.MOD1_MASK;
+        }
+    }
+
+    _maybeWarnModifierConflict() {
+        // If the scroll modifier equals GNOME's "Window Action Key"
+        // (mouse-button-modifier), our overlay grabs pointer events while it is
+        // held, so drag-to-move / click-to-raise stop working. Warn to the
+        // journal so this is discoverable via `journalctl` without guessing.
+        const wm = new Gio.Settings({schema_id: 'org.gnome.desktop.wm.preferences'});
+        const value = wm.get_string('mouse-button-modifier');
+        let wmMod = null;
+        if (value) {
+            if (value.includes('Super')) wmMod = 'super';
+            else if (value.includes('Alt')) wmMod = 'alt';
+            else if (value.includes('Control') || value.includes('Primary')) wmMod = 'ctrl';
+            else if (value.includes('Shift')) wmMod = 'shift';
+        }
+        if (wmMod && wmMod === this._settings.get_string('modifier-key')) {
+            console.warn(`TransparentWindow: scroll modifier "${wmMod}" matches GNOME's ` +
+                `window-action-key (${value}); holding it to drag/raise windows will not ` +
+                `work while scrolling transparency. Change the modifier in preferences.`);
         }
     }
 
