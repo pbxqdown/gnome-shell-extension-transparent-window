@@ -1,5 +1,9 @@
 # Transparent Window GNOME Shell Extension Makefile
 
+TEST_DEPLOY_DIR = $(HOME)/.local/share/gnome-shell/extensions/dev-transparent-window@pbxqdown.github.com
+# Runtime files only (same set as build, plus compiled schemas)
+EXTENSION_FILES = extension.js prefs.js icon.jpg metadata.json lib schemas
+
 # Run unit tests (pure logic, no GNOME Shell required)
 test:
 	@echo "Running unit tests..."
@@ -17,14 +21,16 @@ build: test
 test-deploy: test
 	@echo "Deploying extension for testing..."
 	@glib-compile-schemas schemas/
-	@rsync -a --info=progress2 --delete . ~/.local/share/gnome-shell/extensions/dev-transparent-window@pbxqdown.github.com
-	@sed -i 's/transparent-window@pbxqdown.github.com/dev-transparent-window@pbxqdown.github.com/g;s/Transparent Window/Dev Transparent Window/g' ~/.local/share/gnome-shell/extensions/dev-transparent-window@pbxqdown.github.com/metadata.json
+	@rm -rf $(TEST_DEPLOY_DIR)
+	@mkdir -p $(TEST_DEPLOY_DIR)
+	@rsync -a $(EXTENSION_FILES) $(TEST_DEPLOY_DIR)/
+	@sed -i 's/transparent-window@pbxqdown.github.com/dev-transparent-window@pbxqdown.github.com/g;s/Transparent Window/Dev Transparent Window/g' $(TEST_DEPLOY_DIR)/metadata.json
 	@echo "Extension deployed. Restart gnome shell to make it take effect."
 
 # Clean test deployment
 test-clean:
 	@echo "Cleaning test deployment..."
-	@rm -rf ~/.local/share/gnome-shell/extensions/dev-transparent-window@pbxqdown.github.com
+	@rm -rf $(TEST_DEPLOY_DIR)
 	@echo "Test deployment cleaned."
 
 .PHONY: test build test-deploy test-clean
